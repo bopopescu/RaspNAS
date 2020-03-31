@@ -1,0 +1,27 @@
+html{
+   height: 100%; 
+}
+body{
+    min-height: 100%;
+    margin:0;
+    position: relative;
+    padding-bottom: 150px;
+}
+footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #EAEAEA;
+    border-top: 1.5px solid #D2D2D2;
+    text-align: center;
+    font-size: 10px;
+    padding-bottom: 5px;
+    color: darkslategray;
+}
+*{-moz-box-sizing: border-box;box-sizing: border-box;}
+
+.footer-logo{
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
