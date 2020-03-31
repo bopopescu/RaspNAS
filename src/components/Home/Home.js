@@ -21,32 +21,36 @@ class Home extends Component {
   }
   
   componentWillMount(){
-    let diskNumber = Object.keys(config.path).length;
-    this.setState({diskNumber : diskNumber}, () => {
-      axios.get(config.api+'getharddiskusage')
-      .then((result) => {
-        this.setState({chartData : JSON.parse(result.data)}, () => {
-          let availableStorageCapacity = 0;
-          let availableFreeStorageCapacity = 0;
-          let usedStorageCapacity = 0;
-          let globalHardDiskUsagePercent = 0;
+    if(sessionStorage.getItem('connectedUser') == null){
+      this.props.history.push("/");
+    }else{
+      let diskNumber = Object.keys(config.path).length;
+      this.setState({diskNumber : diskNumber}, () => {
+        axios.get(config.api+'getharddiskusage')
+        .then((result) => {
+          this.setState({chartData : JSON.parse(result.data)}, () => {
+            let availableStorageCapacity = 0;
+            let availableFreeStorageCapacity = 0;
+            let usedStorageCapacity = 0;
+            let globalHardDiskUsagePercent = 0;
 
-          for(let i = 0; i < this.state.diskNumber; i++){
-            availableStorageCapacity = availableStorageCapacity + parseInt(this.state.chartData.usage[i].total);
-            availableFreeStorageCapacity = availableFreeStorageCapacity + parseInt(this.state.chartData.usage[i].free);
-            usedStorageCapacity = usedStorageCapacity + parseInt(this.state.chartData.usage[i].used);
-          }
+            for(let i = 0; i < this.state.diskNumber; i++){
+              availableStorageCapacity = availableStorageCapacity + parseInt(this.state.chartData.usage[i].total);
+              availableFreeStorageCapacity = availableFreeStorageCapacity + parseInt(this.state.chartData.usage[i].free);
+              usedStorageCapacity = usedStorageCapacity + parseInt(this.state.chartData.usage[i].used);
+            }
 
-          globalHardDiskUsagePercent = ((100*usedStorageCapacity)/availableStorageCapacity).toFixed(1);
+            globalHardDiskUsagePercent = ((100*usedStorageCapacity)/availableStorageCapacity).toFixed(1);
 
-          this.setState({
-            availableStorageCapacity : availableStorageCapacity,
-            availableFreeStorageCapacity : availableFreeStorageCapacity,
-            globalHardDiskUsagePercent : globalHardDiskUsagePercent
-          })
+            this.setState({
+              availableStorageCapacity : availableStorageCapacity,
+              availableFreeStorageCapacity : availableFreeStorageCapacity,
+              globalHardDiskUsagePercent : globalHardDiskUsagePercent
+            })
+          });
         });
       });
-    });
+    }
   }
 
   renderHardDiskUsageChart = () => {
@@ -96,7 +100,7 @@ class Home extends Component {
   render() {
     return (
       <>
-        <Navbar />
+        <Navbar history={this.props.history} />
         <br/><br/>
         <div className="container-informations">
           <Tag color="#1890FF">Disque(s) disponible(s) : {this.state.diskNumber}</Tag>

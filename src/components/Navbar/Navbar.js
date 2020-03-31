@@ -18,6 +18,11 @@ class Navbar extends Component {
     });
   }
 
+  logout = () => {
+    sessionStorage.clear();
+    this.props.history.push("/");
+  }
+
   render() {
     return (
       <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
@@ -42,7 +47,7 @@ class Navbar extends Component {
           <i className="fas fa-question-circle"></i>
           &nbsp;&nbsp;<b>À propos</b>
         </Menu.Item>
-        <Menu.Item key="logout">
+        <Menu.Item key="logout" onClick={this.logout.bind(this)}>
           <i className="fas fa-power-off"></i>
           &nbsp;&nbsp;<b>Déconnexion</b>
         </Menu.Item>
