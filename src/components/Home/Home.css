@@ -1,0 +1,29 @@
+.container-informations{
+  display: flex;
+  justify-content: center;
+}
+.container-charts{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+.container-chart{
+  width: 30%;
+}
+.container-legend{
+  display: flex;
+  justify-content: center;
+}
+.rectangle{
+  width: 40px;
+  height: 10px;
+  margin-top: 7px;
+  margin-bottom: 2%;
+}
+.free{
+  background: #E6E6E6;
+}
+.used{
+  background: #36A2EB;
+}

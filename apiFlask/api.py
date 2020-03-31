@@ -35,15 +35,48 @@ def hardDiskUsage():
 
 @api.route('/login', methods=['POST'])
 def login():
-    isConnected = "False"
+    returnValue = ""
     user = request.get_json()
+    username = user["username"]
     password = user["password"]
-    dbPassword = selectDb("SELECT * from user where password = '{}'".format(user["password"]))
+    dbUser = selectDb("SELECT COUNT(*) FROM user ")
 
-    if len(dbPassword) != 0:
-        isConnected = "True"
+    if dbUser[0][0] == 0:
+        # Il n'y a pas de user en bdd.
+        returnValue = "go register"
+    else:
+        # Il y a un user en bdd.
+        dbPassword = selectDb("SELECT password from user where username = '{}'".format(user["username"]))
+        # Il n'y a qu'un seul user ==> s'il y a un retour c'est que le password est correcte.
 
-    return isConnected
+        if len(dbPassword) != 0:
+            if dbPassword[0][0] == user["password"]:
+                returnValue = "True"
+            else:
+                returnValue = "False"
+        else:
+            returnValue = "False"
+
+    return returnValue
+
+
+@api.route('/register', methods=['POST'])
+def register():
+    returnValue = ""
+    user = request.get_json()
+    username = user["username"]
+    password = user["password"]
+    dbUser = selectDb("SELECT COUNT(*) FROM user ")
+
+    if dbUser[0][0] == 0:
+        # Il n'y a pas de user en bdd.
+        execDb("INSERT INTO user (username, password) VALUES('{}','{}')".format(user["username"], user["password"]))
+        returnValue = "True"
+    else:
+        # Il y a un user en bdd.
+        returnValue = "go login"
+
+    return returnValue
 
 
 @api.route('/trombinoscope', methods=['GET'])

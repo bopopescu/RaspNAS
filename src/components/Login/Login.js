@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import LoginForm from './components/LoginForm/LoginForm';
-import Footer from './components/Footer/Footer';
+import LoginForm from './LoginForm/LoginForm';
+import Footer from './Footer/Footer';
 
 
-class App extends Component {
+class Login extends Component {
   render() {
     return (
       <div class="container-login">
@@ -14,4 +14,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Login;
