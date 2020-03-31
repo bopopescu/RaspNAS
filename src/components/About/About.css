@@ -1,0 +1,29 @@
+.container-about{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  width: 100%;
+}
+.app-name{
+  color: #1890ff;
+  font-weight: bold;
+  font-size: 180%;
+  margin-left: 1%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+.container-app-name{
+  display: flex;
+  justify-content: center;
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+.rasp-logo-title{
+  margin-top: -15px;
+}
+.scheme-archi{
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1%;
+}

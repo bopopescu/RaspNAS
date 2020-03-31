@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import App from './App';
 import Register from './components/Register/Register';
 import Home from './components/Home/Home';
+import About from './components/About/About';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
           <Route exact path='/' component={App} />
           <Route path='/register' component={Register} />
           <Route path='/home' component={Home} />
+          <Route path='/about' component={About} />
           {/*<Route component={NotFound} />*/}
         </Switch>
     </Router>,

@@ -12,7 +12,6 @@ class Navbar extends Component {
   }
   
   handleClick = (e) => {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
@@ -31,11 +30,11 @@ class Navbar extends Component {
           &nbsp;&nbsp;
           <b>Rasp NAS</b>
         </Menu.Item>
-        <Menu.Item key="home">
+        <Menu.Item key="home" onClick={() => {this.props.history.push("/home")}}>
           <i className="fas fa-home"></i>
           &nbsp;&nbsp;<b>Accueil</b>
         </Menu.Item>
-        <Menu.Item key="setup">
+        <Menu.Item key="setup" disabled>
           <i className="fas fa-cogs"></i>
           &nbsp;&nbsp;<b>Mise en place</b>
         </Menu.Item>
@@ -43,7 +42,7 @@ class Navbar extends Component {
           <i className="fas fa-folder-open"></i>
           &nbsp;&nbsp;<b>Explorateur de fichiers</b>
         </Menu.Item>
-        <Menu.Item key="about">
+        <Menu.Item key="about" onClick={() => {this.props.history.push("/about")}}>
           <i className="fas fa-question-circle"></i>
           &nbsp;&nbsp;<b>À propos</b>
         </Menu.Item>
