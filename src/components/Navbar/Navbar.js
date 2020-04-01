@@ -8,9 +8,16 @@ class Navbar extends Component {
     super(props);
     this.state = {
       current: 'mail',
+      disableExplorer: true,
     }
   }
   
+  componentWillMount(){
+    if(this.props.disableExplorer == false){
+      this.setState({disableExplorer:false})
+    }
+  }
+
   handleClick = (e) => {
     this.setState({
       current: e.key,
@@ -38,7 +45,7 @@ class Navbar extends Component {
           <i className="fas fa-cogs"></i>
           &nbsp;&nbsp;<b>Mise en place</b>
         </Menu.Item>
-        <Menu.Item key="explorer" disabled>
+        <Menu.Item key="explorer" disabled={this.state.disableExplorer}>
           <i className="fas fa-folder-open"></i>
           &nbsp;&nbsp;<b>Explorateur de fichiers</b>
         </Menu.Item>

@@ -113,38 +113,38 @@ class RegisterForm extends Component {
   render() {
     const { username, password1, password2, passwordVisibilityState1, passwordType1, passwordVisibilityState2, passwordType2, registerIsVisible, message } = this.state;
     return (
-      <div class={registerIsVisible}>
-       <div class="user-modal-container">
-         <ul class="switcher">
+      <div className={registerIsVisible}>
+       <div className="user-modal-container">
+         <ul className="switcher">
            <li><a href="/login" onClick={this.hrefLogin}>Connexion</a></li>
-           <li><a class="selected" >Inscription</a></li>
+           <li><a className="selected" >Inscription</a></li>
          </ul>
           <div id="signup">
-            <form class="form" onSubmit={this.onSubmit}>
+            <form className="form" onSubmit={this.onSubmit}>
             {message !== '' &&
-                <div class="alert alert-warning alert-dismissible" role="alert">
+                <div className="alert alert-warning alert-dismissible" role="alert">
                 {this.returnMessage(message)}
                 </div>
               } 
-              <p class="fieldset">
-               <label class="image-replace username" for="signup-username">Nom d'utilisateur</label>
-               <input class="full-width has-padding has-border" id="signup-email" name="username" type="text" placeholder="Nom d'utilisateur" value={username} onChange={this.onChange} required />
-               <span class="error-message"></span>
+              <p className="fieldset">
+               <label className="image-replace username" for="signup-username">Nom d'utilisateur</label>
+               <input className="full-width has-padding has-border" id="signup-email" name="username" type="text" placeholder="Nom d'utilisateur" value={username} onChange={this.onChange} required />
+               <span className="error-message"></span>
               </p>
-              <p class="fieldset">
-               <label class="image-replace password" for="signup-password">Mot de passe</label>
-               <input class="full-width has-padding has-border" id="signup-password" name="password1" type={passwordType1}  placeholder="Mot de passe" value={password1} onChange={this.onChange} required />
-               <a class="hide-password" id="showHide" onClick={this.showHidePassword1}>{passwordVisibilityState1}</a>
-               <span class="error-message">Your password has to be at least 6 characters long!</span>
+              <p className="fieldset">
+               <label className="image-replace password" for="signup-password">Mot de passe</label>
+               <input className="full-width has-padding has-border" id="signup-password" name="password1" type={passwordType1}  placeholder="Mot de passe" value={password1} onChange={this.onChange} required />
+               <a className="hide-password" id="showHide" onClick={this.showHidePassword1}>{passwordVisibilityState1}</a>
+               <span className="error-message">Your password has to be at least 6 characters long!</span>
               </p>
-             <p class="fieldset">
-               <label class="image-replace password" for="signup-password">Confirmation de mot de passe</label>
-               <input class="full-width has-padding has-border" id="signup-password" name="password2" type={passwordType2}  placeholder="Confirmation de mot de passe" value={password2} onChange={this.onChange} required />
-               <a class="hide-password" id="showHide" onClick={this.showHidePassword2}>{passwordVisibilityState2}</a>
-               <span class="error-message">Your password has to be at least 6 characters long!</span>
+             <p className="fieldset">
+               <label className="image-replace password" for="signup-password">Confirmation de mot de passe</label>
+               <input className="full-width has-padding has-border" id="signup-password" name="password2" type={passwordType2}  placeholder="Confirmation de mot de passe" value={password2} onChange={this.onChange} required />
+               <a className="hide-password" id="showHide" onClick={this.showHidePassword2}>{passwordVisibilityState2}</a>
+               <span className="error-message">Your password has to be at least 6 characters long!</span>
               </p>
-              <p class="fieldset">
-                <input class="full-width has-padding" type="submit" value="S'inscrire" />
+              <p className="fieldset">
+                <input className="full-width has-padding" type="submit" value="S'inscrire" />
               </p>
            </form>
          </div>

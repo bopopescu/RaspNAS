@@ -6,7 +6,7 @@ import Footer from './Footer/Footer';
 class Login extends Component {
   render() {
     return (
-      <div class="container-login">
+      <div className="container-login">
         <LoginForm history={this.props.history}/>
         <Footer />
       </div>

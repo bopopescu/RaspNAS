@@ -1,11 +1,14 @@
-from flask import Flask, json, jsonify, request
+from flask import Flask, json, jsonify, request, send_file
 from flask_cors import CORS
 import mysql.connector
 import json
 import shutil
+import os
 
 api = Flask(__name__)
 CORS(api)
+
+configPath = "C:\\Users\\B147258369\\Desktop\\CESI_innovation\\L3RNE-Boilerplate\\src\\config.json"
 
 
 @api.route('/ping', methods=['GET'])
@@ -16,7 +19,7 @@ def ping():
 
 @api.route('/getharddiskusage', methods=['GET'])
 def hardDiskUsage():
-    with open("C:\\Users\\B147258369\\Desktop\\CESI_innovation\\L3RNE-Boilerplate\\src\\config.json", "r") as f:
+    with open(configPath, "r") as f:
         data = json.load(f)
 
     json_data = '{"usage":['
@@ -26,11 +29,36 @@ def hardDiskUsage():
         totalGB = total // (2 ** 30)
         usedGB = used // (2 ** 30)
         freeGB = free // (2 ** 30)
-        json_data = json_data + '{"total":"' + str(totalGB) + '","used":"' + str(usedGB) + '","free":"' + str(freeGB) + '"},'
+        json_data = json_data + '{"total":"' + str(totalGB) + '","used":"' + str(usedGB) + '","free":"' + str(
+            freeGB) + '"},'
         if i == len(data["path"]) - 1:
-            json_data = json_data + '{"total":"' + str(totalGB) + '","used":"' + str(usedGB) + '","free":"' + str(freeGB) + '"}]}'
+            json_data = json_data + '{"total":"' + str(totalGB) + '","used":"' + str(usedGB) + '","free":"' + str(
+                freeGB) + '"}]}'
 
     return jsonify(json_data)
+
+
+@api.route('/getfoldercontent', methods=['GET'])
+def getFolderContent():
+    returnValue = '{{"content":"undefined"}}'
+    content = []
+    folder = request.args.get('folder')
+    if folder != "undefined":
+        for x in os.listdir(folder):
+            content.append(x)
+
+        returnValue = json.dumps(content)
+    else:
+        returnValue = '{{"content":"undefined"}}'
+
+    return returnValue
+
+
+@api.route('/download')
+def downloadFile ():
+    #For windows you need to use drive name [ex: F:/Example.pdf]
+    path = "E:\\mirage.jpg"
+    return send_file(path, as_attachment=True)
 
 
 @api.route('/login', methods=['POST'])

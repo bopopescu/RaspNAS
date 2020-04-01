@@ -86,32 +86,32 @@ class LoginForm extends Component {
   render() {
     const { username, password, message, passwordVisibilityState, passwordType, loginIsVisible } = this.state;
     return (
-      <div class={loginIsVisible}>
-        <div class="user-modal-container">
-          <ul class="switcher">
-            <li><a class="selected">Connexion</a></li>
+      <div className={loginIsVisible}>
+        <div className="user-modal-container">
+          <ul className="switcher">
+            <li><a className="selected">Connexion</a></li>
             <li><a href="/register" onClick={this.hrefRegister}>Inscription</a></li>
            </ul>
           <div id="login">
-            <form class="form" onSubmit={this.onSubmit}>
+            <form className="form" onSubmit={this.onSubmit}>
               {message !== '' &&
-                <div class="alert alert-warning alert-dismissible" role="alert">
+                <div className="alert alert-warning alert-dismissible" role="alert">
                 {this.returnMessage(message) }
                 </div>
               } 
-              <p class="fieldset">
-                <label class="image-replace username" for="signup-username">Nom d'utilisateur</label>
-                <input class="full-width has-padding has-border" id="signup-email" name="username" type="text" placeholder="Nom d'utilisateur" value={username} onChange={this.onChange} required />
-                <span class="error-message"></span>
+              <p className="fieldset">
+                <label className="image-replace username" for="signup-username">Nom d'utilisateur</label>
+                <input className="full-width has-padding has-border" id="signup-email" name="username" type="text" placeholder="Nom d'utilisateur" value={username} onChange={this.onChange} required />
+                <span className="error-message"></span>
               </p>
-              <p class="fieldset">
-                <label class="image-replace password" for="signin-password">Password</label>
-                <input class="full-width has-padding has-border" id="signin-password" name="password" type={passwordType}  placeholder="Mot de passe" value={password} onChange={this.onChange} required/>
-                <a class="hide-password" id="showHide" onClick={this.showHidePassword}>{passwordVisibilityState}</a>
-                <span class="error-message">Wrong password! Try again.</span>
+              <p className="fieldset">
+                <label className="image-replace password" for="signin-password">Password</label>
+                <input className="full-width has-padding has-border" id="signin-password" name="password" type={passwordType}  placeholder="Mot de passe" value={password} onChange={this.onChange} required/>
+                <a className="hide-password" id="showHide" onClick={this.showHidePassword}>{passwordVisibilityState}</a>
+                <span className="error-message">Wrong password! Try again.</span>
               </p>
-              <p class="fieldset">
-                <input class="full-width" type="submit" value="Se connecter"/>
+              <p className="fieldset">
+                <input className="full-width" type="submit" value="Se connecter"/>
               </p>
             </form>
           </div>

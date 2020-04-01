@@ -89,12 +89,16 @@ class Home extends Component {
               }}
             />
             <br/>
-            <Tag>Disque : {config.path[i].split('\\')[0]}\</Tag>
+            <Tag onClick={this.gotoFileExplorer.bind(this,config.path[i].split('\\')[0])} className="cursor-pointer">Disque : {config.path[i].split('\\')[0]}\</Tag>
           </div>  
         );
       }
     }
     return htmlToReturn;
+  }
+
+  gotoFileExplorer = (folder) => {
+    this.props.history.push("/fileexplorer?folder="+folder+"/");
   }
 
   render() {

@@ -27,3 +27,6 @@
 .used{
   background: #36A2EB;
 }
+.cursor-pointer{
+  cursor: pointer !important;
+}
