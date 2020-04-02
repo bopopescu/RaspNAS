@@ -57,3 +57,10 @@
   justify-content: center;
   margin-top: 2%;
 }
+
+.container-download{
+  position: absolute;
+  left: 0;
+  margin-left: 10px;
+  margin-top: 5px;
+}

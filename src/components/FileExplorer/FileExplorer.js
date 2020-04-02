@@ -4,8 +4,8 @@ import Footer from '../Footer/Footer';
 import './FileExplorer.css';
 import axios from 'axios';
 import config from '../../config.json';
-import { Switch, Breadcrumb, Button, Input } from 'antd';
-import { HomeOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { Switch, Breadcrumb, Button, Input, Upload, message } from 'antd';
+import { HomeOutlined, FolderOpenOutlined, UploadOutlined } from '@ant-design/icons';
 import ModalAddFolder from '../ModalAddFolder/ModalAddFolder';
 import ModalVideo from '../ModalVideo/ModalVideo';
 
@@ -291,11 +291,42 @@ class FileExplorer extends Component {
     })
   }
   
+  updateContentAfterUpload = () => {
+    axios.get(config.api+'/getfoldercontent?folder='+this.state.path)
+    .then((result) => {
+      this.setState({content: result.data});
+    })
+  }
+
   render() {
+    const update = () => this.updateContentAfterUpload();
+    const pathForUpload = this.state.path;
+    const propsUpload = {
+      name: 'file',
+      action: config.api+"/upload?path="+pathForUpload,
+      headers: {
+        authorization: 'authorization-text',
+      },
+      onChange(info) {
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} est maintenant sur le NAS`);
+          update();
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} erreur lors du dépôt.`);
+        }
+      },
+    };
     return (
       <>
         <Navbar history={this.props.history} disableExplorer={false} />
         <div className="container-switch"><Switch defaultChecked checked={this.state.switchValue} onChange={this.onChangeTheme.bind(this)} /></div>
+        <div className="container-download">
+          <Upload {...propsUpload} showUploadList={false}>
+            <Button>
+              <UploadOutlined /> Déposer un fichier
+            </Button>
+          </Upload>
+        </div>
         <div className="container-breadcrumb"><Breadcrumb>{this.renderBreadCrumb()}</Breadcrumb></div>
         <div className="container-search-bar">
           <Search

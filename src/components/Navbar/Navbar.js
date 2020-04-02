@@ -41,10 +41,6 @@ class Navbar extends Component {
           <i className="fas fa-home"></i>
           &nbsp;&nbsp;<b>Accueil</b>
         </Menu.Item>
-        <Menu.Item key="setup" disabled>
-          <i className="fas fa-cogs"></i>
-          &nbsp;&nbsp;<b>Mise en place</b>
-        </Menu.Item>
         <Menu.Item key="explorer" disabled={this.state.disableExplorer}>
           <i className="fas fa-folder-open"></i>
           &nbsp;&nbsp;<b>Explorateur de fichiers</b>

@@ -1,9 +1,10 @@
-from flask import Flask, json, jsonify, request, send_file
-from flask_cors import CORS
+from flask import Flask, json, jsonify, request, send_file, flash, redirect, url_for
+from flask_cors import CORS, cross_origin
 import mysql.connector
 import json
 import shutil
 import os
+from werkzeug.utils import secure_filename
 
 api = Flask(__name__)
 CORS(api)
@@ -60,15 +61,20 @@ def downloadFile ():
 
     return send_file(path, as_attachment=True)
 
-'''
-@api.route('/download', methods=['POST'])
-def downloadFile ():
-    rqt = request.get_json()
-    path = rqt["path"]
-    print(path)
-    path = "E:\\mirage.jpg"
-    return send_file(path, as_attachment=True)
-'''
+
+@api.route('/upload', methods=['GET','POST'])
+def fileUpload():
+    UPLOAD_FOLDER = request.args.get('path')
+    target = os.path.join(UPLOAD_FOLDER, '')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    destination = "/".join([target, filename])
+    file.save(destination)
+    response = "Whatever you wish too return"
+    return response
+
 
 @api.route('/mkdir', methods=['POST'])
 def mkdir():

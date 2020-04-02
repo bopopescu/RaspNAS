@@ -19,7 +19,7 @@ class ModalAddFolder extends Component {
   render() {
     return (
       <Modal
-      title={"Ajouter un dossier"}
+      title={"Vidéo"}
       visible={this.props.visible}
       onCancel={this.cancel.bind(this)}
       footer={
