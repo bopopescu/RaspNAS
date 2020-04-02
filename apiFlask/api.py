@@ -54,18 +54,27 @@ def getFolderContent():
     return returnValue
 
 
-@api.route('/download')
+@api.route('/download', methods=['GET'])
 def downloadFile ():
-    #For windows you need to use drive name [ex: F:/Example.pdf]
+    path = request.args.get('path')
+
+    return send_file(path, as_attachment=True)
+
+'''
+@api.route('/download', methods=['POST'])
+def downloadFile ():
+    rqt = request.get_json()
+    path = rqt["path"]
+    print(path)
     path = "E:\\mirage.jpg"
     return send_file(path, as_attachment=True)
+'''
 
 @api.route('/mkdir', methods=['POST'])
 def mkdir():
     returnValue = "True"
     rqt = request.get_json()
     path = rqt["path"]
-    print(path)
 
     # define the access rights
     access_rights = 0o777

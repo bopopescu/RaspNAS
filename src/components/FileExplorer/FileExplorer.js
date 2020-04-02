@@ -7,6 +7,7 @@ import config from '../../config.json';
 import { Switch, Breadcrumb, Button, Input } from 'antd';
 import { HomeOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import ModalAddFolder from '../ModalAddFolder/ModalAddFolder';
+import ModalVideo from '../ModalVideo/ModalVideo';
 
 const { Search } = Input;
 
@@ -20,6 +21,8 @@ class FileExplorer extends Component {
       switchValue: false,
       searchValue: "",
       showModalMkdir: false,
+      showModalVideo: false,
+      video: "",
     }
   }
 
@@ -61,16 +64,6 @@ class FileExplorer extends Component {
   }
 
   mkdir = () => {
-    /*let path = this.state.path + "toto";
-    axios.post(config.api+'/mkdir',{path})
-    .then((result) => {
-      axios.get(config.api+'/getfoldercontent?folder='+this.state.path)
-      .then((result) => {
-        this.setState({
-          content: result.data
-        });
-      })
-    })*/
     this.setState({showModalMkdir: true})
   }
 
@@ -91,6 +84,8 @@ class FileExplorer extends Component {
 
       let elementId = "e-"+i;
       let folderId = "f-"+i;
+      let musicId = "m-"+i;
+      let videoId = "v-"+i;
 
       if(/^\s+$/.test(this.state.searchValue) || this.state.searchValue == ""){
         if(this.state.switchValue == true){
@@ -98,11 +93,11 @@ class FileExplorer extends Component {
             if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              htmlToReturn.push(<div id={musicId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              htmlToReturn.push(<div id={videoId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "ppt" || ext == "pptx"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "doc" || ext == "docx"){
@@ -124,11 +119,11 @@ class FileExplorer extends Component {
             if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              htmlToReturn.push(<div id={musicId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              htmlToReturn.push(<div id={videoId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "ppt" || ext == "pptx"){
               htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
             }else if(ext == "doc" || ext == "docx"){
@@ -153,11 +148,11 @@ class FileExplorer extends Component {
               if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+                htmlToReturn.push(<div id={musicId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+                htmlToReturn.push(<div id={videoId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "ppt" || ext == "pptx"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "doc" || ext == "docx"){
@@ -179,11 +174,11 @@ class FileExplorer extends Component {
               if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+                htmlToReturn.push(<div id={musicId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+                htmlToReturn.push(<div id={videoId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "ppt" || ext == "pptx"){
                 htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
               }else if(ext == "doc" || ext == "docx"){
@@ -245,6 +240,17 @@ class FileExplorer extends Component {
           content: result.data
         });
       })
+    }else if(e.target.id.split("-")[0] == "m"){
+      path = this.state.path+folder;
+      var audio = new Audio(config.api+"/download?path="+path);
+      audio.play();
+    }else if(e.target.id.split("-")[0] == "v"){
+      path = this.state.path+folder;
+      let newPath = config.api+"/download?path="+path;
+      this.showVideo(true,newPath);
+    }else{ // C'est un fichier
+      path = this.state.path+folder;
+      window.open(config.api+"/download?path="+path, 'Download');
     }
   }
 
@@ -266,17 +272,6 @@ class FileExplorer extends Component {
     this.returnTo(path);
   }
 
-  testdl = () => {
-    axios.get(config.api+'/download')
-      .then((result) => {
-        var data = new Blob([result.data], {type: 'text/plain'});
-
-        var url = window.URL.createObjectURL(data);
-
-        window.open("http://192.168.1.32:5000/download", 'Download'); 
-      })
-  }
-
   setSearch = (e) => {
     this.setState({searchValue: e.target.value})
   }
@@ -289,6 +284,13 @@ class FileExplorer extends Component {
     this.setState({showModalMkdir: false});
   }
 
+  showVideo = (bool,path) => {
+    this.setState({
+      showModalVideo: bool,
+      video : path
+    })
+  }
+  
   render() {
     return (
       <>
@@ -308,6 +310,7 @@ class FileExplorer extends Component {
         </div>
         {/*<Footer />*/}
         <ModalAddFolder visible={this.state.showModalMkdir} setContent={this.setContent} path={this.state.path} hideModalMkdir={this.hideModalMkdir} />
+        <ModalVideo visible={this.state.showModalVideo} showModalVideo={this.showVideo} video={this.state.video} />
       </>
     );
   }
