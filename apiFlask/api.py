@@ -60,6 +60,25 @@ def downloadFile ():
     path = "E:\\mirage.jpg"
     return send_file(path, as_attachment=True)
 
+@api.route('/mkdir', methods=['POST'])
+def mkdir():
+    returnValue = "True"
+    rqt = request.get_json()
+    path = rqt["path"]
+    print(path)
+
+    # define the access rights
+    access_rights = 0o777
+
+    try:
+        os.mkdir(path, access_rights)
+    except OSError:
+        returnValue = "False"
+    else:
+        returnValue = "True"
+
+    return returnValue
+
 
 @api.route('/login', methods=['POST'])
 def login():

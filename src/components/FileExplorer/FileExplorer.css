@@ -49,5 +49,11 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  margin-top: 3%;
+  margin-top: 2.2%;
+}
+
+.container-search-bar{
+  display: flex;
+  justify-content: center;
+  margin-top: 2%;
 }

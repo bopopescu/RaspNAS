@@ -4,8 +4,11 @@ import Footer from '../Footer/Footer';
 import './FileExplorer.css';
 import axios from 'axios';
 import config from '../../config.json';
-import { Switch, Breadcrumb, Button } from 'antd';
-import { HomeOutlined, FolderOpenOutlined } from '@ant-design/icons'
+import { Switch, Breadcrumb, Button, Input } from 'antd';
+import { HomeOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import ModalAddFolder from '../ModalAddFolder/ModalAddFolder';
+
+const { Search } = Input;
 
 
 class FileExplorer extends Component {
@@ -14,7 +17,9 @@ class FileExplorer extends Component {
     this.state = {
       path: "",
       content: [],
-      switchValue: false
+      switchValue: false,
+      searchValue: "",
+      showModalMkdir: false,
     }
   }
 
@@ -55,6 +60,20 @@ class FileExplorer extends Component {
     }
   }
 
+  mkdir = () => {
+    /*let path = this.state.path + "toto";
+    axios.post(config.api+'/mkdir',{path})
+    .then((result) => {
+      axios.get(config.api+'/getfoldercontent?folder='+this.state.path)
+      .then((result) => {
+        this.setState({
+          content: result.data
+        });
+      })
+    })*/
+    this.setState({showModalMkdir: true})
+  }
+
   renderContent = () => {
     let htmlToReturn = [];
     let regex = /(?:\.([^.]+))?$/;
@@ -62,7 +81,9 @@ class FileExplorer extends Component {
     if(this.state.path.split("/").length > 2){
       htmlToReturn.push(<div className="container-element" onClick={this.goBack.bind(this)}><div className="container-img-content"><i className="fas fa-arrow-left fa-3x"></i></div></div>);
     }
-    
+
+    htmlToReturn.push(<div className="container-element" onClick={this.mkdir.bind(this)}><div className="container-img-content"><i className="fas fa-folder-plus fa-3x"></i></div></div>);
+
     for(let i = 0; i < this.state.content.length; i++){
       let ext;
       if(ext = regex.exec(this.state.content[i])[1] == undefined){ext = "undefined"}
@@ -71,60 +92,117 @@ class FileExplorer extends Component {
       let elementId = "e-"+i;
       let folderId = "f-"+i;
 
-      if(this.state.switchValue == true){
-        if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
-          if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "ppt" || ext == "pptx"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "doc" || ext == "docx"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "odt" || ext == "txt" || ext == "log"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "pdf"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "undefined"){
-            htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else{
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+      if(/^\s+$/.test(this.state.searchValue) || this.state.searchValue == ""){
+        if(this.state.switchValue == true){
+          if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
+            if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "ppt" || ext == "pptx"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "doc" || ext == "docx"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "odt" || ext == "txt" || ext == "log"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "pdf"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "undefined"){
+              htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else{
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }
+          }
+        }else{
+          if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
+            if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "ppt" || ext == "pptx"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "doc" || ext == "docx"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "odt" || ext == "txt" || ext == "log"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "pdf"){
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else if(ext == "undefined"){
+              htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }else{
+              htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            }
           }
         }
-      }else{
-        if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
-          if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "ppt" || ext == "pptx"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "doc" || ext == "docx"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "odt" || ext == "txt" || ext == "log"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "pdf"){
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
-          }else if(ext == "undefined"){
-            htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+      }else{ // La bonne fonction de 200 lignes. Je suis pressé. 
+        if(this.state.content[i].toLowerCase().includes(this.state.searchValue.toLowerCase())){
+          if(this.state.switchValue == true){
+            if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
+              if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "ppt" || ext == "pptx"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "doc" || ext == "docx"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "odt" || ext == "txt" || ext == "log"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "pdf"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "undefined"){
+                htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else{
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="fas fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }
+            }
           }else{
-            htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+            if(!this.state.content[i].includes("$")){ // Les dossiers cachés ne sont pas affichés.
+              if(ext == "jpg" || ext == "jpeg" || ext == "png" || ext == "psd" || ext == "gif" || ext == "psd" || ext == "bmp" || ext == "ico" || ext == "svg"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-image fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "mp3" || ext == "mpa" || ext == "ogg" || ext == "wav" || ext == "wma" || ext == "midi"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-audio fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "7z" || ext == "deb" || ext == "pkg" || ext == "zip" || ext == "rar" || ext == "rpm" || ext == "tar.gz" || ext == "gz"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-archive fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "avi" || ext == "flv" || ext == "mp4" || ext == "mpg" || ext == "mpeg" || ext == "wmv" || ext == "3gp" || ext == "mov"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-video fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "ppt" || ext == "pptx"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-powerpoint fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "doc" || ext == "docx"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-word fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "xls" || ext == "xlsx" || ext == "xlsm"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-excel fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "odt" || ext == "txt" || ext == "log"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-alt fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "pdf"){
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file-pdf fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else if(ext == "undefined"){
+                htmlToReturn.push(<div id={folderId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-folder-open fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }else{
+                htmlToReturn.push(<div id={elementId} className="container-element" onClick={this.actionOnElement.bind(this)}><div className="container-img-content"><i className="far fa-file fa-3x"></i></div><p className="filename">{this.state.content[i]}</p></div>);
+              }
+            }
           }
         }
       }
-
     }
 
     return htmlToReturn;
@@ -189,9 +267,6 @@ class FileExplorer extends Component {
   }
 
   testdl = () => {
-    var url="192.168.1.32/E:/KeeWeb-1.11.9.win.x64.exe";    
-    window.open(url, 'Download'); 
-
     axios.get(config.api+'/download')
       .then((result) => {
         var data = new Blob([result.data], {type: 'text/plain'});
@@ -202,17 +277,37 @@ class FileExplorer extends Component {
       })
   }
 
+  setSearch = (e) => {
+    this.setState({searchValue: e.target.value})
+  }
+
+  setContent = (value) => {
+    this.setState({content: value});
+  }
+
+  hideModalMkdir = () => {
+    this.setState({showModalMkdir: false});
+  }
+
   render() {
     return (
       <>
         <Navbar history={this.props.history} disableExplorer={false} />
-        <Button onClick={this.testdl.bind(this)}>Test DL</Button>
         <div className="container-switch"><Switch defaultChecked checked={this.state.switchValue} onChange={this.onChangeTheme.bind(this)} /></div>
         <div className="container-breadcrumb"><Breadcrumb>{this.renderBreadCrumb()}</Breadcrumb></div>
+        <div className="container-search-bar">
+          <Search
+            placeholder="Effectuer une recherche"
+            value={this.state.searchValue}
+            onChange={this.setSearch.bind(this)}
+            style={{ width: 200 }}
+          />
+        </div>
         <div className="container-content">
           {this.renderContent()}
         </div>
         {/*<Footer />*/}
+        <ModalAddFolder visible={this.state.showModalMkdir} setContent={this.setContent} path={this.state.path} hideModalMkdir={this.hideModalMkdir} />
       </>
     );
   }
