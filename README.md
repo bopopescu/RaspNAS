@@ -1,73 +1,96 @@
-## L3RNE-boilerplate
-## Live Reloading React Rest Node Express
+## <b>Rasp NAS</b>
 
-This boilerplate setup a simple react node express application with minimalist REST interaction. 
-For development, two servers are used :
-- the first one for front-end given by [Create React App](https://github.com/facebook/create-react-app) on port 3000 ;
-- the last one for back-end on port 3001 used for api interaction.
-The back-end server is also a proxy and permit to return informations to the front-end server.
-This system of two servers permit to give a live reloading on each side.
-Note that back-end server avoid crash and dismiss errors in terminal instead.
+J'ai réalisé cette application en 4 jours pour mon école lors d'une semaine sur des projets libres.
 
-## Quick Overview
-<img src="src_readme/front.gif" />
-As you can see, update front source file cause a refresh of the page. 
-(Here, we are changing hello by HELLO.)
+Cette application est réalisée en JavaScript/React côté front et en Python/Flask côté back. Elle utilise aussi une base de données MySQL.
 
-<img src="src_readme/back.gif" />
-Update back source file cause restart of the server.
-(Here, we are changing hello by HELLO.)
+<img src="src_readme/scheme.png" width="450" />
 
-## Installation
+J'ai choisi de faire un NAS modulaire en utilisant une Raspberry qui héberge le logiciel et qui permet le contrôle et l’accès aux disques.
+L'application gère le contenu des espaces de stockage qui sont connectés au Raspberry peu importe leur forme (clé USB, disque dur, ...). 
 
-First copy the repo into your disk.
+Il est possible via l'interface web accessible par tous les PC du réseau local de :
+* Consulter la répartition des espaces de stockages
+* Visualiser le contenu des espaces de stockages
+* Télécharger des fichiers
+* Uploader des fichiers
+* Lire des fichiers vidéo/audio
+* Créer des dossiers sur les disques
+* Rechercher des fichiers
+* S'inscrire/Se connecter (l'app n'accepte qu'un seul utilisateur)
 
-`$ git clone https://github.com/BarnaTM/L3RNE-Boilerplate.git`
+Pour ajouter des disques accessibles par l'application il suffit de rajouter le chemin dans le fichier config.json.
+```
+{
+    "api" : "http://192.168.43.192:5000/",
+    "path":[
+        "C:\\,
+        "D:\\"
+    ]
+}
+```
 
-Then
+Vous pouvez installer l’application sur votre pc ou sur une raspberry. Par la suite l’application sera accessible par tous les PC connectés à votre réseau wifi. Pour cela, il faudra ouvrir un navigateur et taper dans la barre d’adresse :  ipdupcquihostlappli:3000
 
-`npm install`
+## 👁️ <b>Aperçu</b>
+<img src="src_readme/login.png" />
+<p align="center">Vue de connexion</p>
+<img src="src_readme/register.png" />
+<p align="center">Vue d'inscription</p>
+<img src="src_readme/storage.png" />
+<p align="center">Page d'accueil</p>
+<img src="src_readme/example.png" />
+<p align="center">Exemple d'arborescence</p>
+<img src="src_readme/usb.png" />
+<p align="center">Assets d'icones</p>
+<img src="src_readme/dark.png" />
+<p align="center">Thème d'icone sombre</p>
+<img src="src_readme/filter.png" />
+<p align="center">Recherche par filtre</p>
+<img src="src_readme/folder.png" />
+<p align="center">Création de dossier</p>
+<img src="src_readme/download.png" />
+<p align="center">Téléchargement</p>
+<img src="src_readme/video.png" />
+<p align="center">Visualisation de vidéo</p>
+<img src="src_readme/upload.png" />
+<p align="center">Upload de fichier</p>
+<img src="src_readme/success.png" />
+<p align="center">Fichier uploadé sur le NAS</p>
+    
+## 📦 <b>Installation</b>
+### <b>1. Préalable pour le fonctionnement</b>
+(Pour une installation sur raspberry je ne fournis pas la documentation permettant de rendre le localhost accessible par tous les PC du réseau ni le partage des disques. Pour un setup simple, prendre un pc windows et faire les instructions ci-dessous)
 
-## Available Scripts
+1.  Installer git 
+2.	Installer node.js
+3.	Ouvrir un terminal et taper `npm install yarn`
+4.	Puis saisir `git clone https://github.com/BarnaGH/RaspNAS` à l’endroit où vous souhaitez l’installer (peu importe l’endroit)
+5.	Installer python dans une version supérieur à la 3.3
+6.	Installer un logiciel de type WAMP
+7.	Créer une base de données nommée « raspnas »
+8.	Injecter le fichier sql « user.sql » situé à la racine du dépôt git
+9.	Ouvrir le fichier « config.json » situé sous src/config.json
+10.	 Ajouter les chemins des disques que vous souhaitez utilisés
+11.	 Changer la ligne api et mettre l’ip de la machine qui va lancé l’api dans config.json
+12.	 Dans le fichier api.py, changer la ligne 12 et ajouter le chemin vers votre fichier de configuration  
+13.	 Pour finir, à la fin du fichier api.py, changer les informations de connexion à votre base si besoin.
+  
+### <b>2. Front End</b>
+Pour faire fonctionner l’application côté front : 
+1.	Se rendre à la racine du dossier cloné via le terminal
+2.	Saisir `yarn` dans le terminal pour installer les paquets
+3.	Une fois l'installation des node_modules terminés, saisir `yarn startf`
+4.	Une fois le serveur lancé, le navigateur va s’ouvrir vers l’adresse localhost:3000
 
-In the project directory, you can run:
+### <b>3. Back END</b>
+Pour faire fonctionner l’application côté back :
+1.	Se rendre dans le dossier apiFlask du dépôt git
+2.	Ouvrir un terminal différent du premier dans le dossier apiFlask et taper `python api.py`
+3.	S’il manque des paquets sur votre machine comme python3-flask-cors ou python3-mysql.connector, les installés avec la commande `pip install`
+4.	Puis relancer l’api 
+5.	Se rendre sur localhost:3000 et tester l’application
 
-### `npm start`
-
-Runs the app in the development mode.
-
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.
-
-You will also see any lint errors in the console.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.
-
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-
-Your app is ready to be deployed !
-
-### `npm test` & `npm run eject`
-
-Theses commands are also available, refer to [CRA's README.md](https://github.com/facebook/create-react-app/blob/master/README.md). 
-
-### `npm run fstart`
-
-Runs the front-end server and open browser at [http://localhost:3000](http://localhost:3000).
-
-### `npm run bstart`
-
-Runs the back-end server.
-
-### `npm run dev`
-
-Runs the front-end server and the back-end server simultaneously.
-
-## License
+## 📄 <b>Licence</b>
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
