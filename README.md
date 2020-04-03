@@ -4,7 +4,7 @@ J'ai réalisé cette application en 4 jours pour mon école lors d'une semaine s
 
 Cette application est réalisée en JavaScript/React côté front et en Python/Flask côté back. Elle utilise aussi une base de données MySQL.
 
-<img src="src_readme/scheme.png" width="450" />
+<div align="center"><img src="src_readme/scheme.png" width="450" /></div>
 
 J'ai choisi de faire un NAS modulaire en utilisant une Raspberry qui héberge le logiciel et qui permet le contrôle et l’accès aux disques.
 L'application gère le contenu des espaces de stockage qui sont connectés au Raspberry peu importe leur forme (clé USB, disque dur, ...). 
